@@ -15,13 +15,13 @@ def required_login(view):
     def view_func(request: HttpRequest, *args, **kwargs):
         token = request.headers.get(AUTH_HEADER, '')
 
-        decode = jwt_decode(token)
+        decode = jwt_decode(token=token)
 
         if 'errors' in decode:
             return response_error(
                 message='auth fail',
                 code=403,
-                error_code=403,
+                error_code=403002,
                 error_field=AUTH_HEADER,
                 error_message=decode['errors']
             )
@@ -30,14 +30,14 @@ def required_login(view):
             user_id = decode.get('payload', {}).get('user_id', 0)
             user = User.objects.get(id=user_id)
             kwargs.update({
-                user: user
+                'user': user
             })
             return view(request, *args, **kwargs)
         except Exception as e:
             return response_error(
                 message='auth fail',
                 code=403,
-                error_code=403,
+                error_code=403002,
                 error_field=AUTH_HEADER,
                 error_message=str(e)
             )

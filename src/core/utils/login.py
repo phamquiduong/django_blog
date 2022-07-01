@@ -62,8 +62,7 @@ def get_token(refresh_token:str):
     else:
         return response_error(
             action='get token',
-            code=403,
-            error_code=403002,
+            error_code=400002,
             error_field='refresh_token',
             error_message=decode.get('errors')
         )

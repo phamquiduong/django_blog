@@ -4,7 +4,7 @@ from core.utils.response import response_error
 from django.http import HttpRequest
 
 
-def get_data(request: HttpRequest, fields: list or str = []):
+def get_data(request: HttpRequest, method: str = 'post', fields: list or str = []):
     if type(fields) == str:
         fields = [fields]
 
@@ -22,10 +22,15 @@ def get_data(request: HttpRequest, fields: list or str = []):
     except Exception as e:
         logger.error(str(e))
 
+    method = method.upper()
+
     try:
         for field in fields:
             field = str(field)
-            value[field] = request.POST.get(field, '')
+            if method == 'POST':
+                value[field] = request.POST.get(field, '')
+            if method == 'GET':
+                value[field] = request.GET.get(field, '')
         return value
     except Exception as e:
         logger.error(str(e))
@@ -44,3 +49,10 @@ def required_field(data: dict = {}, fields: list or str = []):
                 error_field=field,
                 error_message=f'{field} is empty'
             )
+
+
+METHOD_NOT_ALLOWED = response_error(
+    message='method not allowed',
+    code=405,
+    error_code=405
+)

@@ -1,16 +1,41 @@
-from core.utils.request import get_data, required_field
+from core.utils.request import get_data, required_field, METHOD_NOT_ALLOWED
 from core.utils.login import login_by_username, get_token
+from core.decorator.authentication import required_login
+from core.utils.response import response_data
 
 
 def login(request):
-    data = get_data(request=request, fields=['username', 'password'])
-    required = required_field(data=data, fields=['username', 'password'])
-    if required is not None: return required
-    return login_by_username(username=data['username'], password=data['password'])
+    if request.method == 'POST':
+        data = get_data(request=request, fields=['username', 'password'])
+        required = required_field(data=data, fields=['username', 'password'])
+        if required is not None: return required
+        return login_by_username(username=data['username'], password=data['password'])
+    else:
+        return METHOD_NOT_ALLOWED
 
 
 def token(request):
-    data = get_data(request=request, fields='refresh_token')
-    required = required_field(data=data, fields='refresh_token')
-    if required is not None: return required
-    return get_token(refresh_token=data['refresh_token'])
+    if request.method == 'POST':
+        data = get_data(request=request, fields='refresh_token')
+        required = required_field(data=data, fields='refresh_token')
+        if required is not None: return required
+        return get_token(refresh_token=data['refresh_token'])
+    else:
+        return METHOD_NOT_ALLOWED
+
+
+@required_login
+def user(request, *args, **kwargs):
+    if request.method == 'GET':
+        user = kwargs['user']
+        return response_data(
+            action='get user info',
+            data={
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email
+            }
+        )
+    else:
+        return METHOD_NOT_ALLOWED
