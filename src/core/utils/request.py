@@ -4,7 +4,10 @@ from core.utils.response import response_error
 from django.http import HttpRequest
 
 
-def get_data(request: HttpRequest, fields: list = []):
+def get_data(request: HttpRequest, fields: list or str = []):
+    if type(fields) == str:
+        fields = [fields]
+
     value = {}
 
     for field in fields:
@@ -29,7 +32,10 @@ def get_data(request: HttpRequest, fields: list = []):
         return value
 
 
-def required_field(data: dict={}, fields: list=[]):
+def required_field(data: dict = {}, fields: list or str = []):
+    if type(fields) == str:
+        fields = [fields]
+
     for field in fields:
         if data.get(field, '') == '':
             return response_error(

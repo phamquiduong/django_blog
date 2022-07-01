@@ -3,3 +3,4 @@
 
 403:
     001: username or password incorrect
+    002: token not valid

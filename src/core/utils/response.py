@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 
 
-def response_data(message: str = '', data: dict = {}) -> JsonResponse:
+def response_data(message: str = '', action:str='', data: dict = {}) -> JsonResponse:
+    if action: message=f'{action} success'
+
     return JsonResponse({
         'status': True,
         'message': message,
@@ -9,7 +11,8 @@ def response_data(message: str = '', data: dict = {}) -> JsonResponse:
     })
 
 
-def response_error(message: str = '', code: int = 400, error_code: int = 400000, error_field: str = 'all', error_message: str = '') -> JsonResponse:
+def response_error(message: str = '', action:str='', code: int = 400, error_code: int = 400000, error_field: str = 'all', error_message: str = '') -> JsonResponse:
+    if action: message=f'{action} fail'
     return JsonResponse({
         'status': False,
         'message': message,
