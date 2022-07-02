@@ -3,12 +3,15 @@ from core.utils.login import login_by_username, get_token
 from core.decorator.authentication import required_login
 from core.utils.response import response_data
 
+from main.models import Menu
+
 
 def login(request):
     if request.method == 'POST':
         data = get_data(request=request, fields=['username', 'password'])
         required = required_field(data=data, fields=['username', 'password'])
-        if required is not None: return required
+        if required is not None:
+            return required
         return login_by_username(username=data['username'], password=data['password'])
     else:
         return METHOD_NOT_ALLOWED
@@ -18,7 +21,8 @@ def token(request):
     if request.method == 'POST':
         data = get_data(request=request, fields='refresh_token')
         required = required_field(data=data, fields='refresh_token')
-        if required is not None: return required
+        if required is not None:
+            return required
         return get_token(refresh_token=data['refresh_token'])
     else:
         return METHOD_NOT_ALLOWED
@@ -37,5 +41,22 @@ def user(request, *args, **kwargs):
                 'email': user.email
             }
         )
+    else:
+        return METHOD_NOT_ALLOWED
+
+
+def menu(request, *args, **kwargs):
+    if request.method == 'GET':
+        display = request.GET.get('display', 'list')
+        if display.lower() == 'tree':
+            return response_data(
+                action='get menu',
+                data={'menus': Menu.get_tree()}
+            )
+        else:
+            return response_data(
+                action='get menu',
+                data={'menus': Menu.get_list()}
+            )
     else:
         return METHOD_NOT_ALLOWED
