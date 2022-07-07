@@ -49,10 +49,3 @@ def required_field(data: dict = {}, fields: list or str = []):
                 error_field=field,
                 error_message=f'{field} is empty'
             )
-
-
-METHOD_NOT_ALLOWED = response_error(
-    message='method not allowed',
-    code=405,
-    error_code=405
-)

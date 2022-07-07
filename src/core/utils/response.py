@@ -22,3 +22,10 @@ def response_error(message: str = '', action:str='', code: int = 400, error_code
             'error_message': error_message
         }
     }, status=code)
+
+
+METHOD_NOT_ALLOWED = response_error(
+    message='method not allowed',
+    code=405,
+    error_code=405
+)

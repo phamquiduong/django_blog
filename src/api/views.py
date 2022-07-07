@@ -1,4 +1,5 @@
-from core.utils.request import get_data, required_field, METHOD_NOT_ALLOWED
+from core.utils.request import get_data, required_field
+from core.utils.response import METHOD_NOT_ALLOWED
 from core.utils.login import login_by_username, get_token
 from core.decorator.authentication import required_login
 from core.utils.response import response_data
@@ -28,7 +29,7 @@ def token(request):
         return METHOD_NOT_ALLOWED
 
 
-@required_login
+@required_login('GET')
 def user(request, *args, **kwargs):
     if request.method == 'GET':
         user = kwargs['user']
@@ -45,6 +46,7 @@ def user(request, *args, **kwargs):
         return METHOD_NOT_ALLOWED
 
 
+@required_login(['POST'])
 def menu(request, *args, **kwargs):
     if request.method == 'GET':
         display = request.GET.get('display', 'list')
