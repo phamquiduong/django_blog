@@ -1,0 +1,9 @@
+400:
+    001: required field
+    002: field not valid
+
+403:
+    001: username or password incorrect
+    002: token in valid
+
+405: Method not allowed
