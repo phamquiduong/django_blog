@@ -5,7 +5,10 @@ import datetime
 
 
 ACCESS_TOKEN_TIME = datetime.timedelta(hours=1)
+ACCESS_TOKEN_TYPE = 'ACCESS'
+
 REFRESH_TOKEN_TIME = datetime.timedelta(days=180)
+REFRESH_TOKEN_TYPE = 'REFRESH'
 
 
 def login_by_username(username: str, password: str):
@@ -14,11 +17,13 @@ def login_by_username(username: str, password: str):
     if user:
         ACCESS_PAYLOAD = {
             'user_id': user.id,
+            'type': ACCESS_TOKEN_TYPE,
             'exp': datetime.datetime.now() + ACCESS_TOKEN_TIME
         }
 
         REFRESH_PAYLOAD = {
             'user_id': user.id,
+            'type': REFRESH_TOKEN_TYPE,
             'exp': datetime.datetime.now() + REFRESH_TOKEN_TIME
         }
 
